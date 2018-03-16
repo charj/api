@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "cassandra-driver": "^3.4.1",
+    "express": "^4.16.3"
+  },
+  "name": "CharjApi",
+  "version": "1.0.0",
+  "description": "My own API",
+  "main": "index.js",
+  "repository": "http://github.com/charj/api",
+  "author": "Charlie Jennings",
+  "license": "MIT",
+  "scripts": {
+      "start": "nodemon index.js"
+  }
+}
