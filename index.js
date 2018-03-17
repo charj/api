@@ -1,15 +1,41 @@
-const express = require('express')
-const app = express()
+var express = require('express');
+var bodyParser = require('body-parser');
 
-let charlie = {
-    info: {
-        name: 'Charlie Jennings',
-        email: 'dev@charlie.fyi'
-    }
-}
+// create express app
+var app = express();
 
-app.get('/', (req, res) => res.json('Welcome.'))
-app.get('/charlie', (req, res) => res.send(charlie.info))
-app.get('/press-button', (req, res) => res.json('Well it\'s been nice knowing you..'))
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+// parse application/json
+app.use(bodyParser.json())
+
+console.log('Starting DB config');
+
+// Configuring the database
+var dbConfig = require('./config/database.config.js');
+var mongoose = require('mongoose');
+
+mongoose.connect(dbConfig.url);
+
+mongoose.Promise = global.Promise;
+
+mongoose.connection.on('error', function() {
+    console.log('Could not connect to the database. Exiting now...');
+    process.exit();
+});
+
+mongoose.connection.once('open', function(err) {
+    console.log("Successfully connected to the database");
+})
+
+app.get('/', function(req, res){
+    res.json({"message": "Vehicle As Data"});
+});
+
+require('./app/routes/vehicle.routes.js')(app);
+
+// listen for requests
+app.listen(3000, function(){
+    console.log("Server is listening on port 3000");
+});
